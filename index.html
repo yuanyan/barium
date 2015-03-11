@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <title></title>
     <link rel="stylesheet" href="codemirror.css">
-    <link rel="stylesheet" href="timesheet.css">
-    <link rel="stylesheet" href="timesheet-white.css">
     <script type="text" id="code1">
 var React = require('react');
 var Stylist = require('react-stylist');
@@ -53,8 +51,18 @@ return <Example/>
     <style>
         body {
             width: 1024px;
+            background: #eee;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
             margin:0 auto
         }
+
+        h1 {
+            font-size: 2em;
+            font-weight: 500;
+            margin: 1em auto;
+            text-align: center;
+        }
+
         .example {
             margin-bottom: 20px;
         }
@@ -82,7 +90,7 @@ return <Example/>
 
         .playgroundCode {
             border-radius: 0 3px 3px 3px;
-            display: inline-block;
+            float: left;
             overflow: hidden;
             margin: 10px;
             width: 600px;
@@ -92,15 +100,18 @@ return <Example/>
             margin: 10px;
             background-color: #FFF;
             border-radius: 3px;
-            display: inline-block;
             padding: 15px 20px;
+        }
+
+        .playgroundCode, .playgroundPreview {
+            display: inline-block;
         }
     </style>
 </head>
 <body>
-<h1>Live Demo</h1>
+<h1>React Component Live Demo</h1>
 
-<div class="example" id="example1"></div>
+<div class="example" id="example1">loading...</div>
 
 <script src="codemirror.js"></script>
 <!--<script src="foldcode.js"></script>-->
