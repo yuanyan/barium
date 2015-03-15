@@ -4,7 +4,11 @@
     <meta charset="UTF-8">
     <title></title>
     <link rel="stylesheet" href="codemirror.css">
-    <script type="text" id="code1">
+    <link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<script type="text" id="code1">
 var React = require('react');
 var Stylist = require('react-stylist');
 var Example = React.createClass({
@@ -48,70 +52,37 @@ var Example = React.createClass({
 return <Example/>
     </script>
 
-    <style>
-        body {
-            width: 1024px;
-            background: #eee;
-            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-            margin:0 auto
-        }
 
-        h1 {
-            font-size: 2em;
-            font-weight: 500;
-            margin: 1em auto;
-            text-align: center;
-        }
+<header class="header row">
+    <div class="container">
+        <h1 class="logo">
+            React Stylist
+        </h1>
+    </div>
+</header>
 
-        .example {
-            margin-bottom: 20px;
-        }
+<main class="container">
+    <div class="row">
+        <div class="center">
+            <code class="installer">npm install react-stylist</code>
+        </div>
+    </div>
 
-        .playground:after {
-            content: "";
-            display: table;
-            clear: both;
-        }
-        .playground-tab {
-            border-bottom: none !important;
-            border-radius: 3px 3px 0 0;
-            padding: 6px 8px;
-            font-size: 12px;
-            font-weight: bold;
-            color: #C2C0BC;
-            background-color: #F1EDE4;
-            display: inline-block;
-            cursor: pointer;
-        }
+    <div class="row">
+        <h2 class="center">Live Demo</h2>
+        <div class="example" id="example1">loading...</div>
+    </div>
 
-        .playgroundCode, .playground-tab, .playgroundPreview {
-            border: 1px solid rgba(16, 16, 16, 0.1);
-        }
+</main>
 
-        .playgroundCode {
-            border-radius: 0 3px 3px 3px;
-            float: left;
-            overflow: hidden;
-            margin: 10px;
-            width: 600px;
-        }
+<footer class="footer row">
+    <div class="container">
+        <p class="center">
+            <a href="https://github.com/yuanyan/react-stylist">Github</a>
+        </p>
+    </div>
+</footer>
 
-        .playgroundPreview {
-            margin: 10px;
-            background-color: #FFF;
-            border-radius: 3px;
-            padding: 15px 20px;
-        }
-
-        .playgroundCode, .playgroundPreview {
-            display: inline-block;
-        }
-    </style>
-</head>
-<body>
-<h1>React Component Live Demo</h1>
-
-<div class="example" id="example1">loading...</div>
 
 <script src="codemirror.js"></script>
 <!--<script src="foldcode.js"></script>-->
