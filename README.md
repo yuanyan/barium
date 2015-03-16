@@ -1,7 +1,7 @@
 React Stylist
 =============
 
-Style Sheet Component for React.
+Styling with React.
 
 ## Demo & Examples
 

@@ -7,6 +7,7 @@
 html {
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;
 }
 
 body {
@@ -95,18 +96,19 @@ h2 {
 }
 
 .row {
-  padding: 36px 0;
-  padding: 2rem 0;
+  padding: 20px 0;
+  padding: 1rem 0;
 }
 
 /* header */
-.header {
+header {
   position: relative;
+  padding-top: 36px;
   padding-bottom: 45px;
   margin-bottom: 3rem;
 }
 
-.header:before {
+header:before {
   content: "";
   background: #FF4136;
   box-shadow: 0 15px 0 #CC342B, 0 30px 0 #B22D26, 0 45px 0 #992720;
@@ -149,6 +151,10 @@ h2 {
   pointer-events: none;
 }
 
+main {
+  padding-top: 36px;
+}
+
 .installer {
   display: inline-block;
   background: #2b303b;
@@ -161,18 +167,18 @@ h2 {
   padding: 16px 32px;
 }
 
-.footer {
+footer {
   background: #2b303b;
   color: #fff;
 }
 
-.footer a {
+footer a {
   font-weight: 700;
   color: #FF4136;
   text-decoration: none;
 }
 
-.footer a:hover,
-.footer a:focus {
+footer a:hover,
+footer a:focus {
   color: #fff;
 }

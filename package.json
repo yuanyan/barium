@@ -1,7 +1,7 @@
 {
   "name": "react-stylist",
   "version": "0.1.0",
-  "description": "Style Sheet Component for React",
+  "description": "Styling with React",
   "main": "src/Stylist.js",
   "author": "Yuanyan Cao",
   "license": "MIT",
