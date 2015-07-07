@@ -30,46 +30,44 @@ npm install barium --save
 
 ```
 var Barium = require('barium');
-var Example = React.createClass({
-    styles: {
-        '.btn': {
-          display: 'inline-block',
-          color: '#000',
-          padding: '6px 12px',
-          marginBottom: '0',
-          fontSize: '14px',
-          fontWeight: 'normal',
-          lineHeight: '1.428571429',
-          textAlign: 'center',
-          whiteSpace: 'nowrap',
-          verticalAlign: 'middle',
-          cursor: 'pointer',
-          backgroundImage: 'none',
-          border: '1px solid transparent',
-          borderRadius: '4px',
-          userSelect: 'none',
 
-          ':hover': {
-            color: '#fff'
-          },
-          // Try resizing the window!
-          '@media (max-width: 500px)': {
-            backgroundColor: '#5bc0de',
-            borderColor: '#46b8da'
-          }
-        }
+var styles = Barium.create({
+  btn: {
+    display: 'inline-block',
+    color: '#000',
+    padding: '6px 12px',
+    marginBottom: '0',
+    fontSize: '14px',
+    fontWeight: 'normal',
+    lineHeight: '1.428571429',
+    textAlign: 'center',
+    whiteSpace: 'nowrap',
+    verticalAlign: 'middle',
+    cursor: 'pointer',
+    backgroundImage: 'none',
+    border: '1px solid transparent',
+    borderRadius: '4px',
+    userSelect: 'none',
+
+    ':hover': {
+      color: '#fff'
     },
+    // Try resizing the window!
+    '@media (max-width: 500px)': {
+      backgroundColor: '#5bc0de',
+      borderColor: '#46b8da'
+    }
+  }
+})
+
+var Example = React.createClass({
+
     render: function() {
         return (
           <div>
-            <Stylist styles={this.styles} />
-            <button className="btn">Click Me</button>
+            <button className={styles.btn}>Click Me</button>
           </div>
         );
     }
 });
 ```
-
-## Properties
-
-* `styles`: Your style sheets.

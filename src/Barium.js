@@ -1,31 +1,27 @@
 var React = require('react');
+var insertRule = require('react-kit/insertRule');
 var converter = require('./converter');
 
-module.exports = React.createClass({
-    propTypes: {
-        styles: React.PropTypes.object,
-        link: React.PropTypes.string
-    },
+function hashCode(str) {
+  var hash = 0;
+  if (str.length == 0) return hash;
+  for (i = 0; i < str.length; i++) {
+    char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return hash;
+}
 
-    render: function() {
+module.exports = {
+  create: function(styles){
+    var stylesString = '';
+    Object.keys(styles).forEach(function(val, key){
+        var rules = styles[val];
+        var className = '.' + hashCode(JSON.stringify(rules));
+        stylesString += converter.rulesToString(className, rules)
+    });
 
-        var component = null;
-        var styles = this.props.styles;
-        if(styles){
-
-            var stylesString = '';
-            Object.keys(styles).forEach(function(val, key){
-                var rules = styles[val];
-                stylesString += converter.rulesToString(val, rules)
-            });
-
-            component = (<style>
-             {stylesString}
-            </style>)
-        }else if(this.props.link){
-            component = (<link rel="stylesheet"href={this.prop.link} />)
-        }
-
-        return component;
-    }
-});
+    insertRule(styleString);
+  }
+}
