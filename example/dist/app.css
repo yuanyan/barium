@@ -96,8 +96,8 @@ header {
 }
 header:before {
   content: "";
-  background: #FF4136;
-  box-shadow: 0 15px 0 #CC342B, 0 30px 0 #B22D26, 0 45px 0 #992720;
+  background: #962260;
+  box-shadow: 0 15px 0 #861E55, 0 30px 0 #7B1B4E, 0 45px 0 #6B1844;
   -webkit-transform: rotate(-5deg);
   -moz-transform: rotate(-5deg);
   transform: rotate(-5deg);
@@ -118,7 +118,7 @@ header:before {
   position: relative;
   text-align: center;
   width: 230px;
-  background: #FF4136;
+  background: #962260;
   color: #fff;
   border: 22px solid #fff;
   text-rendering: optimizeLegibility;
@@ -153,7 +153,7 @@ footer {
 }
 footer a {
   font-weight: 700;
-  color: #FF4136;
+  color: #962260;
   text-decoration: none;
 }
 footer a:hover,
