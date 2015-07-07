@@ -1,11 +1,11 @@
-React Stylist
-=============
+Barium
+======
 
 Styling with React.
 
 ## Demo & Examples
 
-Live demo: [yuanyan.github.io/react-stylist](http://yuanyan.github.io/react-stylist/)
+Live demo: [yuanyan.github.io/barium](http://yuanyan.github.io/barium/)
 
 To build the examples locally, run:
 
@@ -18,18 +18,18 @@ Then open [`localhost:9999`](http://localhost:9999) in a browser.
 
 ## Installation
 
-The easiest way to use `react-stylist` is to install it from NPM and include it in your own React build process (using [Browserify](http://browserify.org), etc).
+The easiest way to use `barium` is to install it from NPM and include it in your own React build process (using [Browserify](http://browserify.org), etc).
 
-You can also use the standalone build by including `dist/react-stylist.js` in your page. If you use this, make sure you have already included React, and it is available as a global variable.
+You can also use the standalone build by including `dist/barium.js` in your page. If you use this, make sure you have already included React, and it is available as a global variable.
 
 ```
-npm install react-stylist --save
+npm install barium --save
 ```
 
 ## Usage
 
 ```
-var Stylist = require('react-stylist');
+var Barium = require('barium');
 var Example = React.createClass({
     styles: {
         '.btn': {
