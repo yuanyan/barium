@@ -107,40 +107,51 @@ module.exports = {
   isValidValue: isValidValue
 };
 
-},{}],"react-stylist":[function(require,module,exports){
+},{}],"barium":[function(require,module,exports){
 var React = require('react');
 var converter = require('./converter');
 
-var Stylist = React.createClass({displayName: "Stylist",
-    propTypes: {
-        styles: React.PropTypes.object,
-        link: React.PropTypes.string
-    },
+function hashCode(str) {
+  var hash = 0;
+  if (str.length == 0) return hash;
+  for (i = 0; i < str.length; i++) {
+    char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return hash;
+}
 
-    render: function() {
+var head = document.head || document.getElementsByTagName('head')[0];
+function insertStyle(cssText){
 
+  var styleTag = document.createElement('style')
+  styleTag.type = 'text/css'
 
-        var component = null;
-        var styles = this.props.styles;
-        if(styles){
+  if (styleTag.styleSheet) {
+      styleTag.styleSheet.cssText = cssText
+  } else {
+      styleTag.appendChild(document.createTextNode(cssText))
+  }
 
-            var stylesString = '';
-            Object.keys(styles).forEach(function(val, key){
-                var rules = styles[val];
-                stylesString += converter.rulesToString(val, rules)
-            });
+  head.appendChild(styleTag)
+}
 
-            component = (React.createElement("style", null, 
-             stylesString
-            ))
-        }else if(this.props.link){
-            component = (React.createElement("link", {rel: "stylesheet", href: this.prop.link}))
-        }
+module.exports = {
+  create: function(styles){
+    var stylesString = '';
+    var stylesMap = {};
+    Object.keys(styles).forEach(function(val, key){
+        var rules = styles[val];
+        var className = '_' + hashCode(JSON.stringify(rules)); // All with ._ prefix
+        stylesMap[val] = className;
+        stylesString += converter.rulesToString('.' + className, rules);
+    });
 
-        return component;
-    }
-});
+    insertStyle(stylesString);
 
-module.exports = Stylist;
+    return stylesMap;
+  }
+}
 
 },{"./converter":1,"react":undefined}]},{},[]);

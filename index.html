@@ -10,41 +10,43 @@
 
 <script type="text" id="code1">
 var React = require('react');
-var Stylist = require('react-stylist');
-var Example = React.createClass({
-    styles: {
-        '.btn': {
-          display: 'inline-block',
-          color: '#000',
-          padding: '6px 12px',
-          marginBottom: '0',
-          fontSize: '14px',
-          fontWeight: 'normal',
-          lineHeight: '1.428571429',
-          textAlign: 'center',
-          whiteSpace: 'nowrap',
-          verticalAlign: 'middle',
-          cursor: 'pointer',
-          backgroundImage: 'none',
-          border: '1px solid transparent',
-          borderRadius: '4px',
-          userSelect: 'none',
+var Barium = require('barium');
 
-          ':hover': {
-            color: '#fff'
-          },
-          // Try resizing the window!
-          '@media (max-width: 500px)': {
-            backgroundColor: '#5bc0de',
-            borderColor: '#46b8da'
-          }
-        }
+var styles = Barium.create({
+  btn: {
+    display: 'inline-block',
+    color: '#000',
+    padding: '6px 12px',
+    marginBottom: '0',
+    fontSize: '14px',
+    fontWeight: 'normal',
+    lineHeight: '1.428571429',
+    textAlign: 'center',
+    whiteSpace: 'nowrap',
+    verticalAlign: 'middle',
+    cursor: 'pointer',
+    backgroundImage: 'none',
+    border: '1px solid transparent',
+    borderRadius: '4px',
+    userSelect: 'none',
+
+    ':hover': {
+      color: '#fff'
     },
+    // Try resizing the window!
+    '@media (max-width: 500px)': {
+      backgroundColor: '#5bc0de',
+      borderColor: '#46b8da'
+    }
+  }
+})
+
+var Example = React.createClass({
+
     render: function() {
         return (
           <div>
-            <Stylist styles={this.styles} />
-            <button className="btn">Click Me</button>
+            <button className={styles.btn}>Click Me</button>
           </div>
         );
     }
@@ -56,7 +58,7 @@ return <Example/>
 <header class="row">
     <div class="container">
         <h1 class="logo">
-            React Stylist
+            Barium
         </h1>
     </div>
 </header>
@@ -64,7 +66,7 @@ return <Example/>
 <main class="container">
     <div class="row">
         <div class="center">
-            <code class="installer">npm install react-stylist</code>
+            <code class="installer">npm install barium</code>
         </div>
     </div>
 
@@ -78,7 +80,7 @@ return <Example/>
 <footer class="row">
     <div class="container">
         <p class="center">
-            <a href="https://github.com/yuanyan/react-stylist">Github</a>
+            <a href="https://github.com/yuanyan/barium">Github</a>
         </p>
     </div>
 </footer>
