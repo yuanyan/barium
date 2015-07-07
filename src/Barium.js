@@ -1,5 +1,4 @@
 var React = require('react');
-var insertRule = require('react-kit/insertRule');
 var converter = require('./converter');
 
 function hashCode(str) {
@@ -13,18 +12,33 @@ function hashCode(str) {
   return hash;
 }
 
+var head = document.head || document.getElementsByTagName('head')[0];
+function insertStyle(cssText){
+
+  var styleTag = document.createElement('style')
+  styleTag.type = 'text/css'
+
+  if (styleTag.styleSheet) {
+      styleTag.styleSheet.cssText = cssText
+  } else {
+      styleTag.appendChild(document.createTextNode(cssText))
+  }
+
+  head.appendChild(styleTag)
+}
+
 module.exports = {
   create: function(styles){
     var stylesString = '';
     var stylesMap = {};
     Object.keys(styles).forEach(function(val, key){
         var rules = styles[val];
-        var className = '.' + hashCode(JSON.stringify(rules));
+        var className = '_' + hashCode(JSON.stringify(rules)); // All with ._ prefix
         stylesMap[val] = className;
-        stylesString += converter.rulesToString(className, rules);
+        stylesString += converter.rulesToString('.' + className, rules);
     });
 
-    insertRule(styleString);
+    insertStyle(stylesString);
 
     return stylesMap;
   }
