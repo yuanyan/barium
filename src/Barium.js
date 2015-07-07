@@ -16,12 +16,16 @@ function hashCode(str) {
 module.exports = {
   create: function(styles){
     var stylesString = '';
+    var stylesMap = {};
     Object.keys(styles).forEach(function(val, key){
         var rules = styles[val];
         var className = '.' + hashCode(JSON.stringify(rules));
-        stylesString += converter.rulesToString(className, rules)
+        stylesMap[val] = className;
+        stylesString += converter.rulesToString(className, rules);
     });
 
     insertRule(styleString);
+
+    return stylesMap;
   }
 }
