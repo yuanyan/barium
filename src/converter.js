@@ -1,5 +1,6 @@
 var escape = require('./escape');
 var validator = require('./validator');
+var getVendorPropertyName = require('react-kit/getVendorPropertyName');
 
 var _uppercasePattern = /([A-Z])/g;
 var msPattern = /^ms-/;
@@ -50,6 +51,9 @@ function processValueForProp(value, prop) {
 }
 
 function ruleToString(propName, value) {
+
+  propName = getVendorPropertyName(propName);
+  
   var cssPropName = hyphenateProp(propName);
   if (!validator.isValidValue(value)) {
     return '';

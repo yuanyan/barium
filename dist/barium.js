@@ -32,12 +32,11 @@ module.exports = {
       var rules = styles[val];
       var className = '_' + hash(JSON.stringify(rules)); // All with ._ prefix
       var selector = '.' + className;
+      ruleMap[val] = className;
 
       if(!insertedRuleMap[selector]){
-        ruleMap[val] = className;
         cssText += converter.rulesToString(selector, rules);
       }
-
       insertedRuleMap[selector] = true;
     });
 
@@ -48,9 +47,36 @@ module.exports = {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./converter":2,"./hash":4}],2:[function(require,module,exports){
+},{"./converter":3,"./hash":5}],2:[function(require,module,exports){
+'use strict';
+
+var div = document.createElement('div');
+var prefixes = ['Moz', 'Webkit', 'O', 'ms'];
+var domVendorPrefix;
+
+// Helper function to get the proper vendor property name. (transition => WebkitTransition)
+module.exports = function (prop) {
+
+    if (prop in div.style) return prop;
+
+    var prop = prop.charAt(0).toUpperCase() + prop.substr(1);
+    if(domVendorPrefix){
+        return domVendorPrefix + prop;
+    }else{
+        for (var i=0; i<prefixes.length; ++i) {
+            var vendorProp = prefixes[i] + prop;
+            if (vendorProp in div.style) {
+                domVendorPrefix = prefixes[i];
+                return vendorProp;
+            }
+        }
+    }
+}
+
+},{}],3:[function(require,module,exports){
 var escape = require('./escape');
 var validator = require('./validator');
+var getVendorPropertyName = require('react-kit/getVendorPropertyName');
 
 var _uppercasePattern = /([A-Z])/g;
 var msPattern = /^ms-/;
@@ -101,6 +127,9 @@ function processValueForProp(value, prop) {
 }
 
 function ruleToString(propName, value) {
+
+  propName = getVendorPropertyName(propName);
+  
   var cssPropName = hyphenateProp(propName);
   if (!validator.isValidValue(value)) {
     return '';
@@ -156,7 +185,7 @@ module.exports = {
   rulesToString: rulesToString
 };
 
-},{"./escape":3,"./validator":5}],3:[function(require,module,exports){
+},{"./escape":4,"./validator":6,"react-kit/getVendorPropertyName":2}],4:[function(require,module,exports){
 /**
  * Escape special characters in the given string of html.
  *
@@ -174,7 +203,7 @@ module.exports = function(html) {
     .replace(/>/g, '&gt;');
 }
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 module.exports = function (str) {
   var hash = 0;
   if (str.length == 0) return hash;
@@ -186,7 +215,7 @@ module.exports = function (str) {
   return hash;
 }
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 function isValidValue(value) {
   return value !== '' && (typeof value === 'number' || typeof value === 'string');
 }

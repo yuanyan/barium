@@ -1,6 +1,33 @@
 require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+'use strict';
+
+var div = document.createElement('div');
+var prefixes = ['Moz', 'Webkit', 'O', 'ms'];
+var domVendorPrefix;
+
+// Helper function to get the proper vendor property name. (transition => WebkitTransition)
+module.exports = function (prop) {
+
+    if (prop in div.style) return prop;
+
+    var prop = prop.charAt(0).toUpperCase() + prop.substr(1);
+    if(domVendorPrefix){
+        return domVendorPrefix + prop;
+    }else{
+        for (var i=0; i<prefixes.length; ++i) {
+            var vendorProp = prefixes[i] + prop;
+            if (vendorProp in div.style) {
+                domVendorPrefix = prefixes[i];
+                return vendorProp;
+            }
+        }
+    }
+}
+
+},{}],2:[function(require,module,exports){
 var escape = require('./escape');
 var validator = require('./validator');
+var getVendorPropertyName = require('react-kit/getVendorPropertyName');
 
 var _uppercasePattern = /([A-Z])/g;
 var msPattern = /^ms-/;
@@ -51,6 +78,9 @@ function processValueForProp(value, prop) {
 }
 
 function ruleToString(propName, value) {
+
+  propName = getVendorPropertyName(propName);
+  
   var cssPropName = hyphenateProp(propName);
   if (!validator.isValidValue(value)) {
     return '';
@@ -106,7 +136,7 @@ module.exports = {
   rulesToString: rulesToString
 };
 
-},{"./escape":2,"./validator":4}],2:[function(require,module,exports){
+},{"./escape":3,"./validator":5,"react-kit/getVendorPropertyName":1}],3:[function(require,module,exports){
 /**
  * Escape special characters in the given string of html.
  *
@@ -124,7 +154,7 @@ module.exports = function(html) {
     .replace(/>/g, '&gt;');
 }
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 module.exports = function (str) {
   var hash = 0;
   if (str.length == 0) return hash;
@@ -136,7 +166,7 @@ module.exports = function (str) {
   return hash;
 }
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 function isValidValue(value) {
   return value !== '' && (typeof value === 'number' || typeof value === 'string');
 }
@@ -178,12 +208,11 @@ module.exports = {
       var rules = styles[val];
       var className = '_' + hash(JSON.stringify(rules)); // All with ._ prefix
       var selector = '.' + className;
+      ruleMap[val] = className;
 
       if(!insertedRuleMap[selector]){
-        ruleMap[val] = className;
         cssText += converter.rulesToString(selector, rules);
       }
-
       insertedRuleMap[selector] = true;
     });
 
@@ -193,4 +222,4 @@ module.exports = {
   }
 }
 
-},{"./converter":1,"./hash":3,"react":undefined}]},{},[]);
+},{"./converter":2,"./hash":4,"react":undefined}]},{},[]);

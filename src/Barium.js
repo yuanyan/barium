@@ -30,12 +30,11 @@ module.exports = {
       var rules = styles[val];
       var className = '_' + hash(JSON.stringify(rules)); // All with ._ prefix
       var selector = '.' + className;
+      ruleMap[val] = className;
 
       if(!insertedRuleMap[selector]){
-        ruleMap[val] = className;
         cssText += converter.rulesToString(selector, rules);
       }
-
       insertedRuleMap[selector] = true;
     });
 

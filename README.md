@@ -1,7 +1,15 @@
 Barium
 ======
 
-Styling with React.
+Pragmatic Styling with React.js
+
+## Features
+
+* No cascading
+* No nesting
+* Selectors are generated and are unique
+* Automatically add vendor prefixes
+* Automatically add default px unit to numeric values where needed
 
 ## Demo & Examples
 

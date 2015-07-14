@@ -1,8 +1,8 @@
 {
   "name": "barium",
-  "version": "0.1.0",
-  "description": "Styling with React",
-  "main": "src/Stylist.js",
+  "version": "0.1.1",
+  "description": "Pragmatic Styling with React.js",
+  "main": "src/Barium.js",
   "author": "Yuanyan Cao",
   "license": "MIT",
   "repository": {
