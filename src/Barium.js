@@ -1,45 +1,46 @@
 var React = require('react');
 var converter = require('./converter');
+var hash = require('./hash');
 
-function hashCode(str) {
-  var hash = 0;
-  if (str.length == 0) return hash;
-  for (i = 0; i < str.length; i++) {
-    char = str.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
-    hash = hash & hash; // Convert to 32bit integer
-  }
-  return hash;
-}
-
+var insertedRuleMap = {};
 var head = document.head || document.getElementsByTagName('head')[0];
-function insertStyle(cssText){
+var styleTag;
 
-  var styleTag = document.createElement('style')
-  styleTag.type = 'text/css'
+function appendStyle(cssText) {
+
+  if(!styleTag){
+    styleTag = document.createElement('style')
+    head.appendChild(styleTag)
+  }
 
   if (styleTag.styleSheet) {
-      styleTag.styleSheet.cssText = cssText
+    styleTag.styleSheet.cssText += cssText
   } else {
-      styleTag.appendChild(document.createTextNode(cssText))
+    styleTag.appendChild(document.createTextNode(cssText))
   }
 
-  head.appendChild(styleTag)
 }
 
 module.exports = {
-  create: function(styles){
-    var stylesString = '';
-    var stylesMap = {};
-    Object.keys(styles).forEach(function(val, key){
-        var rules = styles[val];
-        var className = '_' + hashCode(JSON.stringify(rules)); // All with ._ prefix
-        stylesMap[val] = className;
-        stylesString += converter.rulesToString('.' + className, rules);
+  create: function(styles) {
+    var cssText = '';
+    var ruleMap = {};
+
+    Object.keys(styles).forEach(function(val, key) {
+      var rules = styles[val];
+      var className = '_' + hash(JSON.stringify(rules)); // All with ._ prefix
+      var selector = '.' + className;
+
+      if(!insertedRuleMap[selector]){
+        ruleMap[val] = className;
+        cssText += converter.rulesToString(selector, rules);
+      }
+
+      insertedRuleMap[selector] = true;
     });
 
-    insertStyle(stylesString);
+    appendStyle(cssText);
 
-    return stylesMap;
+    return ruleMap;
   }
 }

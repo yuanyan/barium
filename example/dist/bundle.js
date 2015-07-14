@@ -5,6 +5,24 @@ var validator = require('./validator');
 var _uppercasePattern = /([A-Z])/g;
 var msPattern = /^ms-/;
 
+// Don't automatically add 'px' to these possibly-unitless properties.
+// Borrowed from jquery.
+var cssNumber = {
+  'column-count': true,
+  'fill-opacity': true,
+  'flex': true,
+  'flex-grow': true,
+  'flex-shrink': true,
+  'font-weight': true,
+  'line-height': true,
+  'opacity': true,
+  'order': true,
+  'orphans': true,
+  'widows': true,
+  'z-index': true,
+  'zoom': true
+}
+
 function hyphenateProp(string) {
   // MozTransition -> -moz-transition
   // msTransition -> -ms-transition. Notice the lower case m
@@ -15,13 +33,21 @@ function hyphenateProp(string) {
     .replace(msPattern, '-ms-');
 }
 
-function escapeValueForProp(value, prop) {
+
+function processValueForProp(value, prop) {
   // 'content' is a special property that must be quoted
   if (prop === 'content') {
     return '"' + value + '"';
   }
 
-  return escape(value);
+  // Add px to numeric values
+  if (!cssNumber[prop] && typeof value == 'number') {
+    value += 'px'
+  }else{
+    value = escape(value);
+  }
+
+  return value;
 }
 
 function ruleToString(propName, value) {
@@ -29,7 +55,7 @@ function ruleToString(propName, value) {
   if (!validator.isValidValue(value)) {
     return '';
   }
-  return cssPropName + ':' + escapeValueForProp(value, cssPropName) + ';';
+  return cssPropName + ':' + processValueForProp(value, cssPropName) + ';';
 }
 
 function _rulesToStringHeadless(styleObj) {
@@ -80,7 +106,7 @@ module.exports = {
   rulesToString: rulesToString
 };
 
-},{"./escape":2,"./validator":3}],2:[function(require,module,exports){
+},{"./escape":2,"./validator":4}],2:[function(require,module,exports){
 /**
  * Escape special characters in the given string of html.
  *
@@ -99,6 +125,18 @@ module.exports = function(html) {
 }
 
 },{}],3:[function(require,module,exports){
+module.exports = function (str) {
+  var hash = 0;
+  if (str.length == 0) return hash;
+  for (i = 0; i < str.length; i++) {
+    char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return hash;
+}
+
+},{}],4:[function(require,module,exports){
 function isValidValue(value) {
   return value !== '' && (typeof value === 'number' || typeof value === 'string');
 }
@@ -110,48 +148,49 @@ module.exports = {
 },{}],"barium":[function(require,module,exports){
 var React = require('react');
 var converter = require('./converter');
+var hash = require('./hash');
 
-function hashCode(str) {
-  var hash = 0;
-  if (str.length == 0) return hash;
-  for (i = 0; i < str.length; i++) {
-    char = str.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
-    hash = hash & hash; // Convert to 32bit integer
-  }
-  return hash;
-}
-
+var insertedRuleMap = {};
 var head = document.head || document.getElementsByTagName('head')[0];
-function insertStyle(cssText){
+var styleTag;
 
-  var styleTag = document.createElement('style')
-  styleTag.type = 'text/css'
+function appendStyle(cssText) {
+
+  if(!styleTag){
+    styleTag = document.createElement('style')
+    head.appendChild(styleTag)
+  }
 
   if (styleTag.styleSheet) {
-      styleTag.styleSheet.cssText = cssText
+    styleTag.styleSheet.cssText += cssText
   } else {
-      styleTag.appendChild(document.createTextNode(cssText))
+    styleTag.appendChild(document.createTextNode(cssText))
   }
 
-  head.appendChild(styleTag)
 }
 
 module.exports = {
-  create: function(styles){
-    var stylesString = '';
-    var stylesMap = {};
-    Object.keys(styles).forEach(function(val, key){
-        var rules = styles[val];
-        var className = '_' + hashCode(JSON.stringify(rules)); // All with ._ prefix
-        stylesMap[val] = className;
-        stylesString += converter.rulesToString('.' + className, rules);
+  create: function(styles) {
+    var cssText = '';
+    var ruleMap = {};
+
+    Object.keys(styles).forEach(function(val, key) {
+      var rules = styles[val];
+      var className = '_' + hash(JSON.stringify(rules)); // All with ._ prefix
+      var selector = '.' + className;
+
+      if(!insertedRuleMap[selector]){
+        ruleMap[val] = className;
+        cssText += converter.rulesToString(selector, rules);
+      }
+
+      insertedRuleMap[selector] = true;
     });
 
-    insertStyle(stylesString);
+    appendStyle(cssText);
 
-    return stylesMap;
+    return ruleMap;
   }
 }
 
-},{"./converter":1,"react":undefined}]},{},[]);
+},{"./converter":1,"./hash":3,"react":undefined}]},{},[]);

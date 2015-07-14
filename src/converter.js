@@ -4,6 +4,24 @@ var validator = require('./validator');
 var _uppercasePattern = /([A-Z])/g;
 var msPattern = /^ms-/;
 
+// Don't automatically add 'px' to these possibly-unitless properties.
+// Borrowed from jquery.
+var cssNumber = {
+  'column-count': true,
+  'fill-opacity': true,
+  'flex': true,
+  'flex-grow': true,
+  'flex-shrink': true,
+  'font-weight': true,
+  'line-height': true,
+  'opacity': true,
+  'order': true,
+  'orphans': true,
+  'widows': true,
+  'z-index': true,
+  'zoom': true
+}
+
 function hyphenateProp(string) {
   // MozTransition -> -moz-transition
   // msTransition -> -ms-transition. Notice the lower case m
@@ -14,13 +32,21 @@ function hyphenateProp(string) {
     .replace(msPattern, '-ms-');
 }
 
-function escapeValueForProp(value, prop) {
+
+function processValueForProp(value, prop) {
   // 'content' is a special property that must be quoted
   if (prop === 'content') {
     return '"' + value + '"';
   }
 
-  return escape(value);
+  // Add px to numeric values
+  if (!cssNumber[prop] && typeof value == 'number') {
+    value += 'px'
+  }else{
+    value = escape(value);
+  }
+
+  return value;
 }
 
 function ruleToString(propName, value) {
@@ -28,7 +54,7 @@ function ruleToString(propName, value) {
   if (!validator.isValidValue(value)) {
     return '';
   }
-  return cssPropName + ':' + escapeValueForProp(value, cssPropName) + ';';
+  return cssPropName + ':' + processValueForProp(value, cssPropName) + ';';
 }
 
 function _rulesToStringHeadless(styleObj) {
