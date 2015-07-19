@@ -5,11 +5,10 @@ Pragmatic Styling with React.js
 
 ## Features
 
-* No cascading
-* No nesting
-* Selectors are generated and are unique
-* Automatically add vendor prefixes
-* Automatically add default px unit to numeric values where needed
+* Keep Simple: No cascading, No nesting
+* No Conflict: Selectors are generated and are unique
+* Better CSS Support: Pseudo Classes, Media Queries
+* Automatically Add things: Vendor Prefixes, Default "px" unit to numeric values where needed
 
 ## Demo & Examples
 
