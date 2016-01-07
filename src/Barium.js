@@ -41,5 +41,25 @@ module.exports = {
     appendStyle(cssText);
 
     return ruleMap;
+  },
+  createKeyframes: function(styles) {
+    var cssText = '';
+    var ruleMap = {};
+
+    Object.keys(styles).forEach(function(val, key) {
+          var rules = styles[val];
+          var keyframeName = '_' + hash(JSON.stringify(rules)); // All with ._ prefix
+          var keyframeRule = " @keyframes " + keyframeName + "{" + rules + "} "
+          ruleMap[val] = keyframeName;
+          
+      if(!insertedRuleMap[keyframeName]){
+        cssText += keyframeRule;
+      }
+      insertedRuleMap[keyframeName] = true;          
+    });
+    
+    appendStyle(cssText);
+    
+    return ruleMap;
   }
 }
