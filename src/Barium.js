@@ -21,45 +21,44 @@ function appendStyle(cssText) {
 
 }
 
-module.exports = {
-  create: function(styles) {
-    var cssText = '';
-    var ruleMap = {};
+export const create = (styles) => {
+  let cssText = '';
+  let ruleMap = {};
 
-    Object.keys(styles).forEach(function(val, key) {
-      var rules = styles[val];
-      var className = '_' + hash(JSON.stringify(rules)); // All with ._ prefix
-      var selector = '.' + className;
-      ruleMap[val] = className;
+  Object.keys(styles).forEach((val, key) => {
+    let rules = styles[val];
+    let className = `_${hash(JSON.stringify(rules))}`; // All with ._ prefix
+    let selector = `.${className}`;
+    ruleMap[val] = className;
 
-      if(!insertedRuleMap[selector]){
-        cssText += converter.rulesToString(selector, rules);
-      }
-      insertedRuleMap[selector] = true;
-    });
+    if(!insertedRuleMap[selector]){
+      cssText += converter.rulesToString(selector, rules);
+    }
+    insertedRuleMap[selector] = true;
+  });
 
-    appendStyle(cssText);
+  appendStyle(cssText);
 
-    return ruleMap;
-  },
-  createKeyframes: function(styles) {
-    var cssText = '';
-    var ruleMap = {};
+  return ruleMap;
+};
 
-    Object.keys(styles).forEach(function(val, key) {
-          var rules = styles[val];
-          var keyframeName = '_' + hash(JSON.stringify(rules)); // All with ._ prefix
-          var keyframeRule = " @keyframes " + keyframeName + "{" + rules + "} "
-          ruleMap[val] = keyframeName;
+export const createKeyframes = (styles) => {
+  var cssText = '';
+  var ruleMap = {};
 
-      if(!insertedRuleMap[keyframeName]){
-        cssText += keyframeRule;
-      }
-      insertedRuleMap[keyframeName] = true;
-    });
+  Object.keys(styles).forEach((val, key) => {
+        let rules = styles[val];
+        let keyframeName = `_${hash(JSON.stringify(rules))}`;
+        let keyframeRule = ` @keyframes ${keyframeName} {${rules}} `;
+        ruleMap[val] = keyframeName;
 
-    appendStyle(cssText);
+    if(!insertedRuleMap[keyframeName]){
+      cssText += keyframeRule;
+    }
+    insertedRuleMap[keyframeName] = true;
+  });
 
-    return ruleMap;
-  }
-}
+  appendStyle(cssText);
+
+  return ruleMap;
+};
