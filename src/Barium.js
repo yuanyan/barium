@@ -1,6 +1,6 @@
-var React = require('react');
-var converter = require('./converter');
-var hash = require('./hash');
+import React from 'react';
+import converter from './converter';
+import hash from './hash';
 
 var insertedRuleMap = {};
 var head = document.head || document.getElementsByTagName('head')[0];
@@ -51,15 +51,15 @@ module.exports = {
           var keyframeName = '_' + hash(JSON.stringify(rules)); // All with ._ prefix
           var keyframeRule = " @keyframes " + keyframeName + "{" + rules + "} "
           ruleMap[val] = keyframeName;
-          
+
       if(!insertedRuleMap[keyframeName]){
         cssText += keyframeRule;
       }
-      insertedRuleMap[keyframeName] = true;          
+      insertedRuleMap[keyframeName] = true;
     });
-    
+
     appendStyle(cssText);
-    
+
     return ruleMap;
   }
 }
