@@ -1,7 +1,9 @@
 import React from 'react';
-import converter from './converter';
+import { rulesToString, ruleToString } from './converter';
 import hash from './hash';
+import getVendorPrefix from "react-kit/getVendorPrefix";
 
+const vendorPrefix = getVendorPrefix();
 var insertedRuleMap = {};
 var head = document.head || document.getElementsByTagName('head')[0];
 var styleTag;
@@ -32,7 +34,7 @@ export const create = (styles) => {
     ruleMap[val] = className;
 
     if(!insertedRuleMap[selector]){
-      cssText += converter.rulesToString(selector, rules);
+      cssText += rulesToString(selector, rules);
     }
     insertedRuleMap[selector] = true;
   });
@@ -42,23 +44,36 @@ export const create = (styles) => {
   return ruleMap;
 };
 
-export const createKeyframes = (styles) => {
-  var cssText = '';
-  var ruleMap = {};
+export const createKeyframes = (keyframes) => {
+  let animationName = `_${hash(JSON.stringify(keyframes))}`;
+  let cssText = `
+    @${vendorPrefix}keyframes ${animationName} {
+  `;
 
-  Object.keys(styles).forEach((val, key) => {
-        let rules = styles[val];
-        let keyframeName = `_${hash(JSON.stringify(rules))}`;
-        let keyframeRule = ` @keyframes ${keyframeName} {${rules}} `;
-        ruleMap[val] = keyframeName;
+  for (var frame in keyframes) {
+    cssText += `
+      ${frame} {
+    `;
 
-    if(!insertedRuleMap[keyframeName]){
-      cssText += keyframeRule;
+    for (var cssProperty in keyframes[frame]) {
+      let cssValue = keyframes[frame][cssProperty];
+      cssText += ruleToString(cssProperty, cssValue);
     }
-    insertedRuleMap[keyframeName] = true;
-  });
+
+    cssText += "}";
+  }
+
+  cssText += "}";
 
   appendStyle(cssText);
 
-  return ruleMap;
+  return animationName;
 };
+
+export const createAnimations = (animations) => {
+  let animationMap = {};
+  Object.keys(animations).forEach((animation) => {
+    animationMap[animation] = createKeyframes(animations[animation]);
+  });
+  return animationMap;
+}
