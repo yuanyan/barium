@@ -38,6 +38,24 @@ npm install barium --save
 ```
 var Barium = require('barium');
 
+var pulseKeyframes = `
+	0% {
+		transform: scale3d(1, 1, 1);
+	}
+
+	50% {
+		transform: scale3d(1.05, 1.05, 1.05);
+	}
+
+	100% {
+		transform: scale3d(1, 1, 1);
+	}
+`;
+
+var animations = Barium.createKeyframes({
+  pulse: pulseKeyframes
+});
+
 var styles = Barium.create({
   btn: {
     display: 'inline-block',
@@ -57,7 +75,8 @@ var styles = Barium.create({
     userSelect: 'none',
 
     ':hover': {
-      color: '#fff'
+      color: '#fff',
+      animation: `${animations.pulse} .5s infinite`
     },
     // Try resizing the window!
     '@media (max-width: 500px)': {

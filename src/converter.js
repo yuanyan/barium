@@ -1,13 +1,13 @@
-var escape = require('./escape');
-var validator = require('./validator');
-var getVendorPropertyName = require('react-kit/getVendorPropertyName');
+import escape from './escape';
+import isValidValue from './validator';
+import getVendorPropertyName from 'react-kit/getVendorPropertyName';
 
-var _uppercasePattern = /([A-Z])/g;
-var msPattern = /^ms-/;
+const _uppercasePattern = /([A-Z])/g;
+const msPattern = /^ms-/;
 
 // Don't automatically add 'px' to these possibly-unitless properties.
 // Borrowed from jquery.
-var cssNumber = {
+const cssNumber = {
   'column-count': true,
   'fill-opacity': true,
   'flex': true,
@@ -34,35 +34,35 @@ function hyphenateProp(string) {
 }
 
 
-function processValueForProp(value, prop) {
+const processValueForProp = (value, prop) => {
   // 'content' is a special property that must be quoted
   if (prop === 'content') {
-    return '"' + value + '"';
+    return `"${value}"`;
   }
 
   // Add px to numeric values
   if (!cssNumber[prop] && typeof value == 'number') {
     value += 'px'
-  }else{
+  } else {
     value = escape(value);
   }
 
   return value;
 }
 
-function ruleToString(propName, value) {
+export const ruleToString = (propName, value) => {
 
   propName = getVendorPropertyName(propName);
-  
+
   var cssPropName = hyphenateProp(propName);
-  if (!validator.isValidValue(value)) {
+  if (!isValidValue(value)) {
     return '';
   }
-  return cssPropName + ':' + processValueForProp(value, cssPropName) + ';';
+  return `${cssPropName}: ${processValueForProp(value, cssPropName)};`;
 }
 
-function _rulesToStringHeadless(styleObj) {
-  var markup = '';
+const _rulesToStringHeadless = (styleObj) => {
+  let markup = '';
 
   for (var key in styleObj) {
     if (!styleObj.hasOwnProperty(key)) {
@@ -77,10 +77,10 @@ function _rulesToStringHeadless(styleObj) {
   return markup;
 }
 
-function rulesToString(className, styleObj) {
-  var markup = '';
-  var pseudos = '';
-  var mediaQueries = '';
+export const rulesToString = (className, styleObj) => {
+  let markup = '';
+  let pseudos = '';
+  let mediaQueries = '';
 
   for (var key in styleObj) {
     if (!styleObj.hasOwnProperty(key)) {
@@ -88,23 +88,30 @@ function rulesToString(className, styleObj) {
     }
     // Skipping the special pseudo-selectors and media queries.
     if (key[0] === ':') {
-      pseudos += className + key + '{' +
-        _rulesToStringHeadless(styleObj[key]) + '}';
+      pseudos += `
+      ${className}${key} {
+        ${_rulesToStringHeadless(styleObj[key])}
+      }
+      `;
     } else if (key.substring(0, 6) === '@media') {
 
-      mediaQueries += key + '{' + rulesToString(className, styleObj[key]) + '}';
+      mediaQueries += `
+      ${key} {
+        ${rulesToString(className, styleObj[key])}
+      }
+      `;
     } else {
       markup += ruleToString(key, styleObj[key]);
     }
   }
 
   if (markup !== '') {
-    markup = className + '{' + markup + '}';
+    markup = `
+    ${className} {
+      ${markup}
+    }
+    `;
   }
 
-  return markup + pseudos + mediaQueries;
-}
-
-module.exports = {
-  rulesToString: rulesToString
+  return `${markup}${pseudos}${mediaQueries}`;
 };

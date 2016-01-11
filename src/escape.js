@@ -6,7 +6,7 @@
  * @api private
  */
 
-module.exports = function(html) {
+export default (html) => {
   return String(html)
     .replace(/&/g, '&amp;')
     .replace(/"/g, '&quot;')

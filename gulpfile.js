@@ -16,6 +16,7 @@ var browserify = require('browserify'),
 	reactify = require('reactify'),
 	source = require('vinyl-source-stream'),
 	watchify = require('watchify');
+	babelify = require('babelify');
 
 
 /**
@@ -230,6 +231,7 @@ gulp.task('build:dist', ['prepare:dist'], function() {
 	var standalone = browserify('./' + SRC_PATH + '/' + PACKAGE_FILE, {
 			standalone: COMPONENT_NAME
 		})
+		.transform(babelify, { "presets": ["es2015"] })
 		.transform(reactify)
 		.transform(shim);
 
